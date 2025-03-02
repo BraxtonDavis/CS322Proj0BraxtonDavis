@@ -59,22 +59,24 @@ int main(void) {
 }
     /* TODO:  Write this part */
     /******* loop so that we have a chance to do fun things *******/
-    bool get_user_preference(){
-        int selection = 0;
-        char buffer[256] = "";
+bool get_user_preference() {
+    int selection = 0;
+    char buffer[256];
 
     printf("Select an option:\n");
     printf("1 - Run vulnerable code\n");
     printf("2 - Run secure code (default)\n");
     printf("Enter your choice: ");
-    /* Read input from the keyboard */
+
     if (fgets(buffer, sizeof(buffer), stdin) != NULL) {
         if (sscanf(buffer, "%d", &selection) == 1) {
             return (selection == 1);
         }
     }
-    return false;
+
+    return false; // Default to secure mode
 }
+
 
 /* Purpose: print all information
  *          -- revealing PINS is bad! but helps us understand
