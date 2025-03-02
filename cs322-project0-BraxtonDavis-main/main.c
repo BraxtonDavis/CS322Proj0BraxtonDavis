@@ -1,5 +1,5 @@
 /* Project 0 - Input Validation and Buffer Overruns
- * Author: TODO: add your name here
+ * Author: Braxton Davis
  * Purpose: create a program that does not validate input and leads to a buffer
  *          overflow, and allows memory to directly accessed.  Also, write
  *          more secure versions of the functions that do not have these
@@ -59,6 +59,7 @@ int main(void) {
 
     /* TODO:  Write this part */
     /******* loop so that we have a chance to do fun things *******/
+    while (1) {
         /* print out this information (info leak, but helps us learn) */
         for (i = 0; i < num_users; i++) {
             print_this_user_info(i, user_data.user_name[i],
@@ -67,15 +68,32 @@ int main(void) {
         printf("-------------\n");
 
         /******* Execute vulnerable code, or not, depending on user choice *******/
-        /* if the user chose to live dangerously and run vulnerable functions */
-            /* prompt user for which user they want to work with, using get_user_to_modify_vulnerable() */
-            /* prompt user for new PIN (this can be a function you create, or just put the code directly here */
-            /* change the pin using the function, change_pin_vulnerable */
-        /* otherwise, if the user did not want to risk it, and chose to run the more secure functions */
-            /* prompt user for which user they want to work with, using get_user_to_modify_more_secure() */
-            /* prompt user for new PIN (this can be a function you create, or just put the code directly here */
-            /* change the pin using the function, change_pin_more_secure */
-    /* end of loop */
+        if (vulnerable_mode) {
+            user_index = get_user_to_modify_vulnerable();
+        } else {
+            user_index = get_user_to_modify_more_secure(num_users);
+        }
+
+        /* Check if the user chose to exit */
+        if (user_index == EXIT_VALUE) {
+            break;
+        }
+
+        /* Prompt user for new PIN */
+        printf("Enter new PIN for user %d: ", user_index);
+        fgets(buffer, sizeof(buffer), stdin);
+        sscanf(buffer, "%d", &new_pin);
+
+        /* Change the PIN using the appropriate function */
+        if (vulnerable_mode) {
+            change_pin_vulnerable(user_index, user_data.user_pin, new_pin);
+        } else {
+            success = change_pin_more_secure(user_index, user_data.user_pin, new_pin);
+            if (!success) {
+                printf("PIN change failed due to invalid input.\n");
+            }
+        }
+    }
 
     /* exit program */
     return 0;
