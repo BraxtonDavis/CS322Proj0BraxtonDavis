@@ -56,47 +56,24 @@ int main(void) {
 
     /******* does the user want to run vulnerable code? *******/
     vulnerable_mode = get_user_preference();
-
+}
     /* TODO:  Write this part */
     /******* loop so that we have a chance to do fun things *******/
-    while (1) {
-        /* print out this information (info leak, but helps us learn) */
-        for (i = 0; i < num_users; i++) {
-            print_this_user_info(i, user_data.user_name[i],
-                                 user_data.user_pin[i], user_data.user_isAdmin[i]);
-        }
-        printf("-------------\n");
+    bool get_user_preference(){
+        int selection = 0;
+        char buffer[256] = "";
 
-        /******* Execute vulnerable code, or not, depending on user choice *******/
-        if (vulnerable_mode) {
-            user_index = get_user_to_modify_vulnerable();
-        } else {
-            user_index = get_user_to_modify_more_secure(num_users);
-        }
-
-        /* Check if the user chose to exit */
-        if (user_index == EXIT_VALUE) {
-            break;
-        }
-
-        /* Prompt user for new PIN */
-        printf("Enter new PIN for user %d: ", user_index);
-        fgets(buffer, sizeof(buffer), stdin);
-        sscanf(buffer, "%d", &new_pin);
-
-        /* Change the PIN using the appropriate function */
-        if (vulnerable_mode) {
-            change_pin_vulnerable(user_index, user_data.user_pin, new_pin);
-        } else {
-            success = change_pin_more_secure(user_index, user_data.user_pin, new_pin);
-            if (!success) {
-                printf("PIN change failed due to invalid input.\n");
-            }
+    printf("Select an option:\n");
+    printf("1 - Run vulnerable code\n");
+    printf("2 - Run secure code (default)\n");
+    printf("Enter your choice: ");
+    /* Read input from the keyboard */
+    if (fgets(buffer, sizeof(buffer), stdin) != NULL) {
+        if (sscanf(buffer, "%d", &selection) == 1) {
+            return (selection == 1);
         }
     }
-
-    /* exit program */
-    return 0;
+    return false;
 }
 
 /* Purpose: print all information
@@ -116,18 +93,7 @@ void print_this_user_info(unsigned short userindex, char username[],
  *          return true (vulnerable option)
  *          otherwise, return false (not-vulnerable option).
  * Returns: true - if user chose to be vulnerable, false - otherwise */
-bool get_user_preference() {
-    char buffer[256] = "";          /* read from the keyboard */
-    int selection = 0;              /* user's choice */
-    /* print a menu for the 2 options */
-    printf("Make a simple menu here.  Enter stuff: ");  // you should edit this line
-    /* read input from keyboard using fgets() and sscanf() with %d */
-    fgets(buffer, sizeof(buffer), stdin);
-    sscanf(buffer, "%d", &selection);
-    /* if they entered 1, return true */
-    /* if they entered anything else, return false (default option is secure) */
-    return false; // you will edit this line, too
-}
+
 
 /* TODO: WRITE THIS FUNCTION */
 /* Purpose:  Read from the keyboard.
