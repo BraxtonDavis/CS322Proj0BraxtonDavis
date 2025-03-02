@@ -111,17 +111,10 @@ int get_user_to_modify_vulnerable(void) {
     return desired_index;
 }
 
-/* TODO:  WRITE THIS FUNCTION */
-/* Purpose: When passed the user's index number (user_i),
- *          the entire pin array (u_pin[]), and
- *          the new pin (new_pin),
- *          reset that user's pin.
- *          Do not do any input validation in this intentionally vulnerable function.
- * Returns: nothing, but may have some vulnerabilities */
-void change_pin_vulnerable(int user_i, unsigned short u_pin[], int new_pin) {
-    /* TODO: modify the desired u_pin, which can be done on one line. */
-    // does not return a value, so no return statement needed
+    void change_pin_vulnerable(int user_i, unsigned short u_pin[], int new_pin) {
+    u_pin[user_i] = (unsigned short)new_pin;  // Directly assign new_pin to u_pin[user_i]
 }
+
 
 /* TODO:  WRITE THIS FUNCTION */
 /* Purpose:  Read from the keyboard.
