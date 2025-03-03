@@ -59,22 +59,7 @@ int main(void) {
 }
     /* TODO:  Write this part */
     /******* loop so that we have a chance to do fun things *******/
-    bool get_user_preference(){
-        int selection = 0;
-        char buffer[256] = "";
 
-    printf("Select an option:\n");
-    printf("1 - Run vulnerable code\n");
-    printf("2 - Run secure code (default)\n");
-    printf("Enter your choice: ");
-    /* Read input from the keyboard */
-    if (fgets(buffer, sizeof(buffer), stdin) != NULL) {
-        if (sscanf(buffer, "%d", &selection) == 1) {
-            return (selection == 1);
-        }
-    }
-    return false;
-}
 
 /* Purpose: print all information
  *          -- revealing PINS is bad! but helps us understand
@@ -93,6 +78,23 @@ void print_this_user_info(unsigned short userindex, char username[],
  *          return true (vulnerable option)
  *          otherwise, return false (not-vulnerable option).
  * Returns: true - if user chose to be vulnerable, false - otherwise */
+bool get_user_preference() {
+    int selection = 0;
+    char buffer[256];
+
+    printf("Select an option:\n");
+    printf("1 - Run vulnerable code\n");
+    printf("2 - Run secure code (default)\n");
+    printf("Enter your choice: ");
+
+    if (fgets(buffer, sizeof(buffer), stdin) != NULL) {
+        if (sscanf(buffer, "%d", &selection) == 1) {
+            return (selection == 1);
+        }
+    }
+
+    return false; // Default to secure mode
+}
 
 
 /* TODO: WRITE THIS FUNCTION */
@@ -100,40 +102,47 @@ void print_this_user_info(unsigned short userindex, char username[],
  *           No input validation is done in this function, so it is vulnerable.
  * Returns:  The (unvalidated) integer index that the user wants to modify. */
 int get_user_to_modify_vulnerable(void) {
-    char buffer[256] = "";          /* read from the keyboard */
-    int  desired_index = 0;         /* index of user to modify */
-    /* prompt the user to enter the desired index */
-    /* read input from keyboard using fgets() and sscanf() with %d */
-    /* quit program if desired */
-    /* otherwise, return the result */
-    return -1;  // you will edit this line, too
+    char buffer[256] = "";
+    int desired_index = 0;
+    printf("Enter the index of the user to modify (or -1 to exit): ");
+    if (fgets(buffer, sizeof(buffer), stdin) != NULL) {
+        sscanf(buffer, "%d", &desired_index);
+    }
+    return desired_index;
 }
 
-/* TODO:  WRITE THIS FUNCTION */
-/* Purpose: When passed the user's index number (user_i),
- *          the entire pin array (u_pin[]), and
- *          the new pin (new_pin),
- *          reset that user's pin.
- *          Do not do any input validation in this intentionally vulnerable function.
- * Returns: nothing, but may have some vulnerabilities */
-void change_pin_vulnerable(int user_i, unsigned short u_pin[], int new_pin) {
-    /* TODO: modify the desired u_pin, which can be done on one line. */
-    // does not return a value, so no return statement needed
+    void change_pin_vulnerable(int user_i, unsigned short u_pin[], int new_pin) {
+    u_pin[user_i] = (unsigned short)new_pin;  // Directly assign new_pin to u_pin[user_i]
 }
+
 
 /* TODO:  WRITE THIS FUNCTION */
 /* Purpose:  Read from the keyboard.
  *           Verify that value entered is valid. Re-prompt until satisfied.
  * Returns:  the (validated) integer index that the user wants to modify. */
 int get_user_to_modify_more_secure(int current_num_users) {
-    /* loop, unless they type EXIT_VALUE */
-    /* read input from keyboard using fgets() and sscanf() with %d */
-    /* quit the program, if the user entered the EXIT_VALUE */
-    /* perform input validation on the user's input */
-    /* if valid, return the answer */
-    /* otherwise, print an error message and loop to reprompt the user */
-    return -1; // you will edit this line, too
+    char buffer[256] = "";
+    int user_index = -1;
+
+    while (1) {
+        printf("Enter the index of the user to modify (0-%d) or %d to exit: ",
+               current_num_users - 1, EXIT_VALUE);
+
+        if (fgets(buffer, sizeof(buffer), stdin) != NULL) {
+            if (sscanf(buffer, "%d", &user_index) == 1) {
+                if (user_index == EXIT_VALUE) {
+                    return EXIT_VALUE;
+                }
+                if (user_index >= 0 && user_index < current_num_users) {
+                    return user_index;
+                }
+            }
+        }
+        printf("Invalid input. Please enter a number between 0 and %d, or %d to exit.\n",
+               current_num_users - 1, EXIT_VALUE);
+    }
 }
+
 
 /* TODO:  WRITE THIS FUNCTION */
 /* Purpose: When passed the user's index number (user_i),
