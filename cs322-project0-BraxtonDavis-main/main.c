@@ -2,9 +2,9 @@
 #include <string.h>
 #include <stdbool.h>
 
-#define MAX_USERS 10    /* maximum number of users allowed */
-#define MAX_NAME_LEN 39 /* maximum number of letters in username allowed */
-#define EXIT_VALUE 99   /* what to type to quit the loop */
+#define MAX_USERS 10
+#define MAX_NAME_LEN 39
+#define EXIT_VALUE 99
 #define MIN_PIN 1000
 #define MAX_PIN 9999
 
@@ -17,28 +17,27 @@ bool change_pin_more_secure(int user_i, unsigned short u_pin[], int new_pin, int
 
 int main(void) {
     struct {
-        unsigned short user_isAdmin[MAX_USERS];   /* an array, true if this user is an admin */
-        unsigned short user_pin[MAX_USERS];       /* an array, user's PIN, in decimal form */
-        char user_name[MAX_USERS][MAX_NAME_LEN]; /* an array of character strings */
+        unsigned short user_isAdmin[MAX_USERS];
+        unsigned short user_pin[MAX_USERS];
+        char user_name[MAX_USERS][MAX_NAME_LEN];
     } user_data;
 
-    int num_users = 0;            /* how many users do we have? */
-    int user_index = 0;           /* which user to work with */
-    int new_pin = 0;              /* new value for pin */
-    bool vulnerable_mode = false; /* user preference to run vulnerable functions, or not */
-    bool success = false;         /* did the pin change succeed */
-    char buffer[256];             /* read from keyboard */
+    int num_users = 0;
+    int user_index = 0;
+    int new_pin = 0;
+    bool vulnerable_mode = false;
+    bool success = false;
+    char buffer[256];
 
-    /******* Set up default user accounts *******/
     memset(user_data.user_isAdmin, 0, sizeof(user_data.user_isAdmin));
     memset(user_data.user_pin, 0, sizeof(user_data.user_pin));
     memset(user_data.user_name, '-', sizeof(user_data.user_name));
 
-    user_data.user_pin[0] = 16962; // 4242 in hex
+    user_data.user_pin[0] = 16962;
     user_data.user_isAdmin[0] = true;
     strncpy(user_data.user_name[0], "ADMIN", strlen("ADMIN") + 1);
 
-    user_data.user_pin[1] = 4369; // 1111 in hex
+    user_data.user_pin[1] = 4369;
     user_data.user_isAdmin[1] = false;
     strncpy(user_data.user_name[1], "DEFAULT USER", strlen("DEFAULT USER") + 1);
 
@@ -111,7 +110,7 @@ bool get_user_preference() {
         }
     }
 
-    return false; // Default to secure mode
+    return false;
 }
 
 /* Purpose: Read user index from the keyboard without validation */
@@ -127,7 +126,7 @@ int get_user_to_modify_vulnerable(void) {
 
 /* Purpose: Change PIN without validation */
 void change_pin_vulnerable(int user_i, unsigned short u_pin[], int new_pin) {
-    u_pin[user_i] = (unsigned short)new_pin; // Directly assign new_pin to u_pin[user_i]
+    u_pin[user_i] = (unsigned short)new_pin;
 }
 
 /* Purpose: Get validated user index */
@@ -142,10 +141,10 @@ int get_user_to_modify_more_secure(int current_num_users) {
         if (fgets(buffer, sizeof(buffer), stdin) != NULL) {
             if (sscanf(buffer, "%d", &user_index) == 1) {
                 if (user_index == EXIT_VALUE) {
-                    return EXIT_VALUE; // Exit condition met
+                    return EXIT_VALUE;
                 }
                 if (user_index >= 0 && user_index < current_num_users) {
-                    return user_index; // Valid index
+                    return user_index;
                 }
             }
         }
@@ -154,7 +153,6 @@ int get_user_to_modify_more_secure(int current_num_users) {
     }
 }
 
-/* Purpose: Securely change a user's PIN */
 bool change_pin_more_secure(int user_i, unsigned short u_pin[], int new_pin, int num_users) {
     if (user_i < 0 || user_i >= num_users) {
         printf("Error: Invalid user index.\n");
