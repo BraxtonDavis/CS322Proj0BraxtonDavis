@@ -121,14 +121,28 @@ int get_user_to_modify_vulnerable(void) {
  *           Verify that value entered is valid. Re-prompt until satisfied.
  * Returns:  the (validated) integer index that the user wants to modify. */
 int get_user_to_modify_more_secure(int current_num_users) {
-    /* loop, unless they type EXIT_VALUE */
-    /* read input from keyboard using fgets() and sscanf() with %d */
-    /* quit the program, if the user entered the EXIT_VALUE */
-    /* perform input validation on the user's input */
-    /* if valid, return the answer */
-    /* otherwise, print an error message and loop to reprompt the user */
-    return -1; // you will edit this line, too
+    char buffer[256] = "";
+    int user_index = -1;
+
+    while (1) {
+        printf("Enter the index of the user to modify (0-%d) or %d to exit: ",
+               current_num_users - 1, EXIT_VALUE);
+
+        if (fgets(buffer, sizeof(buffer), stdin) != NULL) {
+            if (sscanf(buffer, "%d", &user_index) == 1) {
+                if (user_index == EXIT_VALUE) {
+                    return EXIT_VALUE;
+                }
+                if (user_index >= 0 && user_index < current_num_users) {
+                    return user_index;
+                }
+            }
+        }
+        printf("Invalid input. Please enter a number between 0 and %d, or %d to exit.\n",
+               current_num_users - 1, EXIT_VALUE);
+    }
 }
+
 
 /* TODO:  WRITE THIS FUNCTION */
 /* Purpose: When passed the user's index number (user_i),
