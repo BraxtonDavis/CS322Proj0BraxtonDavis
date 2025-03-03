@@ -131,10 +131,10 @@ int get_user_to_modify_more_secure(int current_num_users) {
         if (fgets(buffer, sizeof(buffer), stdin) != NULL) {
             if (sscanf(buffer, "%d", &user_index) == 1) {
                 if (user_index == EXIT_VALUE) {
-                    return EXIT_VALUE;
+                    return EXIT_VALUE; // Exit condition met
                 }
                 if (user_index >= 0 && user_index < current_num_users) {
-                    return user_index;
+                    return user_index; // Valid index
                 }
             }
         }
@@ -142,6 +142,7 @@ int get_user_to_modify_more_secure(int current_num_users) {
                current_num_users - 1, EXIT_VALUE);
     }
 }
+
 
 
 /* TODO:  WRITE THIS FUNCTION */
