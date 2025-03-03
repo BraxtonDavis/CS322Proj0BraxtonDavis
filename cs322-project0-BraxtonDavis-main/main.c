@@ -155,9 +155,21 @@ int get_user_to_modify_more_secure(int current_num_users) {
  *        yikes the information available to this function is excessive!
  *        However, C syntax with pointers is a pain, and this makes it "feel"
  *        like a more familiar language such as Java. */
-bool change_pin_more_secure(int user_i, unsigned short u_pin[], int new_pin) {
-    /* validate index */
-    /* validate pin */
-    /* assign if valid */
-    return false; // you will edit this line, too
+#define MIN_PIN 1000
+#define MAX_PIN 9999
+
+bool change_pin_more_secure(int user_i, unsigned short u_pin[], int new_pin, int num_users) {
+    if (user_i < 0 || user_i >= num_users) {
+        printf("Error: Invalid user index.\n");
+        return false;
+    }
+
+    if (new_pin < MIN_PIN || new_pin > MAX_PIN) {
+        printf("Error: PIN must be a 4-digit number.\n");
+        return false;
+    }
+
+    u_pin[user_i] = (unsigned short)new_pin;
+    printf("Success: PIN changed for user %d.\n", user_i);
+    return true;
 }
